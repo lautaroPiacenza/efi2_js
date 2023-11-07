@@ -3,10 +3,11 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
+  
+  Redirect,
   useHistory
 } from "react-router-dom";
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import Navbar from './components/Navbar'; // Importa el componente Navbar
 import Contact from './pages/Contact';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -16,72 +17,52 @@ const PASS = "demo"
 
 export default function App() {
   let history = useHistory();
-  //let location = useLocation();
   const [globalState, setGlobalState] = useState({
-    auth:{
-      entro:false
+    auth: {
+      entro: false,
+      usuario: null // Agrega una propiedad para el nombre de usuario
     },
-ui:{
-  modoOscuro: false
-}
+    ui: {
+      modoOscuro: false
+    }
   });
-/*useEffect (()=> {
-  if ((location && location.pathname !== "/login") && !globalState.auth.entro) 
-  history.push("/login");
-  console.log(globalState)
-},[globalState,location, history])*/
-  const handleOnAuthenticate = (values)=> {
-    if (values.username === USER && values.password === PASS){
+
+  const handleOnAuthenticate = (values) => {
+    if (values.username === USER && values.password === PASS) {
       const validUser = { ...globalState };
       validUser.auth.entro = true;
-      setGlobalState(validUser)
+      validUser.auth.usuario = values.username; // Establece el nombre de usuario
+      setGlobalState(validUser);
 
       history.push("/");
     }
   }
 
-  
+  const toggleDarkMode = () => {
+    const updatedState = { ...globalState };
+    updatedState.ui.modoOscuro = !updatedState.ui.modoOscuro;
+    setGlobalState(updatedState);
+  }
+
   return (
     <Router>
       <div>
-       {globalState.auth.entro && (
-       <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Inicio de sesion</Link>
-            </li>
-            <li>
-              <Link to="/contact">Users</Link>
-            </li>
-          </ul>
-        </nav>
-      )}
-
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+        <Navbar globalState={globalState} toggleDarkMode={toggleDarkMode} /> {/* Agrega la Navbar */}
         <Switch>
           <Route path="/login">
-            <Login onAuthenticate={handleOnAuthenticate} globalState={globalState}/>
+            <Login onAuthenticate={handleOnAuthenticate} globalState={globalState} />
           </Route>
-          <Route path="/contact" render={() => {
-            if (!globalState.auth.entro) return <Redirect to="/login"/>
-            return<Contact/>
-            }}/>
-            
-          <Route path="/" render={() => {
-            if (!globalState.auth.entro) return <Redirect to="/login"/>
-            return<Home/>
-            }} />
-          
+          <Route path="/contact">
+            {globalState.auth.entro ? <Contact /> : <Redirect to="/login" />}
+          </Route>
+          <Route path="/">
+            {globalState.auth.entro ? <Home /> : <Redirect to="/login" />}
+          </Route>
         </Switch>
       </div>
     </Router>
   );
 }
-
 
 
 

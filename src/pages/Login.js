@@ -3,8 +3,10 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
-const Login = ({onAuthenticate,globalState}) => {
-    if (globalState.auth.entro) return <Redirect to="/"/>
+// const useAppContext = /* ... */; // Comentario desactivando la advertencia
+
+const Login = ({ onAuthenticate, globalState }) => {
+  if (globalState.auth.entro) return <Redirect to="/" />;
   return (
     <Form
       name="normal_login"
@@ -40,15 +42,14 @@ const Login = ({onAuthenticate,globalState}) => {
           placeholder="Password"
         />
       </Form.Item>
-     
 
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-       
       </Form.Item>
     </Form>
   );
 };
+
 export default Login;
