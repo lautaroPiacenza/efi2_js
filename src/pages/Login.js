@@ -2,11 +2,18 @@ import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import { useAppContext } from '../contexts/AppContext';
 
 // const useAppContext = /* ... */; // Comentario desactivando la advertencia
 
-const Login = ({ onAuthenticate, globalState }) => {
-  if (globalState.auth.entro) return <Redirect to="/" />;
+const Login = () => {
+  const{login, logout, user}= useAppContext();
+  const handleOnAuthenticate = (values) => {
+    login(values)
+    
+  }
+
+  if (user) return <Redirect to="/" />;
   return (
     <Form
       name="normal_login"
@@ -14,7 +21,7 @@ const Login = ({ onAuthenticate, globalState }) => {
       initialValues={{
         remember: true,
       }}
-      onFinish={onAuthenticate}
+      onFinish={handleOnAuthenticate}
     >
       <Form.Item
         name="username"

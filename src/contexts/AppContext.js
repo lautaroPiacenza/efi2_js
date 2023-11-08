@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState } from "react";
 
 const AppContext = createContext();
 
+const USER = "usuario";
+const PASS = "demo";
+
 export function AppProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [user, setUser] = useState(null);
@@ -10,8 +13,11 @@ export function AppProvider({ children }) {
     setIsDarkMode((prevMode) => !prevMode);
   };
 
-  const login = (username) => {
-    setUser(username);
+  const login = (values) => {
+    if (values.username === USER && values.password === PASS){
+      setUser(values.username)
+    }
+
   };
 
   const logout = () => {
